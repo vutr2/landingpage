@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PancreaAI — Physics-Informed AI for Early Pancreatic Cancer Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --off-white: #f7f8f9;
+    --surface: #f0f2f5;
+    --border: #e2e6ea;
+    --border-strong: #c8cdd4;
+    --text-primary: #0d1117;
+    --text-secondary: #4a5568;
+    --text-muted: #8a95a3;
+    --accent: #00b140;
+    --accent-light: #e6f7ec;
+    --accent-dark: #008f33;
+    --nvidia: #76b900;
+    --nvidia-light: #f0f7e6;
+    --danger: #dc3545;
+    --blue: #1a56db;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', 'Courier New', monospace;
+    --max-w: 1120px;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 64px;
+    display: flex;
+    align-items: center;
+  }
+  .nav-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 32px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+  .nav-logo-mark {
+    width: 32px; height: 32px;
+    background: var(--text-primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-logo-mark svg { width: 18px; height: 18px; }
+  .nav-logo-text {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-cta {
+    background: var(--text-primary);
+    color: var(--white) !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500 !important;
+    transition: background 0.15s !important;
+  }
+  .nav-cta:hover { background: #2d3748 !important; color: var(--white) !important; }
+
+  /* ── SECTIONS ── */
+  section { padding: 96px 32px; }
+  .container { max-width: var(--max-w); margin: 0 auto; }
+
+  /* ── HERO ── */
+  #hero {
+    padding-top: 140px;
+    padding-bottom: 80px;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--nvidia-light);
+    border: 1px solid #c0dc8a;
+    color: #3d6000;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    letter-spacing: 0.01em;
+  }
+  .hero-badge-dot {
+    width: 7px; height: 7px;
+    background: var(--nvidia);
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    max-width: 820px;
+    margin-bottom: 24px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 580px;
+    line-height: 1.65;
+    margin-bottom: 44px;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--white);
+    border: none;
+    padding: 14px 28px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: #2d3748; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-strong);
+    padding: 14px 28px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  .btn-secondary:hover { border-color: var(--text-primary); transform: translateY(-1px); }
+
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .hero-stat {}
+  .hero-stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .hero-stat-num span { color: var(--accent); }
+  .hero-stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+  .hero-stat-divider {
+    width: 1px;
+    height: 48px;
+    background: var(--border);
+  }
+
+  /* ── PROBLEM ── */
+  #problem {
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+  .section-desc {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+    font-weight: 300;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--white);
+  }
+  .problem-card {
+    padding: 36px 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    transition: background 0.2s;
+  }
+  .problem-card:nth-child(2n) { border-right: none; }
+  .problem-card:nth-child(3), .problem-card:nth-child(4) { border-bottom: none; }
+  .problem-card:hover { background: var(--off-white); }
+
+  .problem-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  .problem-icon.red { background: #fff0f0; color: var(--danger); }
+  .problem-icon.orange { background: #fff7ed; color: #c2410c; }
+  .problem-icon.blue { background: #eff6ff; color: #1d4ed8; }
+  .problem-icon.purple { background: #f5f3ff; color: #6d28d9; }
+
+  .problem-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .problem-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .problem-big-stat {
+    margin-top: 56px;
+    padding: 40px 48px;
+    background: var(--text-primary);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .problem-big-stat-text { color: var(--white); }
+  .problem-big-stat-text .num {
+    font-family: var(--font-display);
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+  }
+  .problem-big-stat-text .label {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+  }
+  .problem-big-stat-desc {
+    max-width: 480px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── SOLUTION ── */
+  #solution { background: var(--white); }
+  .solution-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .solution-left {}
+  .solution-right {}
+
+  .solution-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .feature-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+    cursor: default;
+  }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-row:hover { background: var(--off-white); }
+  .feature-row-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding-top: 3px;
+    min-width: 24px;
+  }
+  .feature-row-content h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .feature-row-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .comparison-box {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .comparison-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .comparison-col-head {
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .comparison-col-head.old {
+    background: #fff0f0;
+    color: #b91c1c;
+    border-right: 1px solid var(--border);
+  }
+  .comparison-col-head.new {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+  }
+  .comparison-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .comparison-row:last-child { border-bottom: none; }
+  .comparison-cell {
+    padding: 14px 20px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .comparison-cell.old {
+    background: var(--white);
+    color: var(--text-secondary);
+    border-right: 1px solid var(--border);
+  }
+  .comparison-cell.new {
+    background: var(--white);
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .comparison-cell.old::before { content: "✕"; color: #ef4444; font-size: 11px; min-width: 14px; }
+  .comparison-cell.new::before { content: "✓"; color: var(--accent); font-size: 11px; min-width: 14px; }
+
+  /* ── TECHNOLOGY ── */
+  #technology {
+    background: var(--text-primary);
+    color: var(--white);
+  }
+  #technology .section-label { color: var(--accent); }
+  #technology h2 { color: var(--white); }
+  #technology .section-desc { color: rgba(255,255,255,0.6); }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 56px;
+  }
+  .tech-card {
+    background: #161b22;
+    padding: 36px 32px;
+    transition: background 0.2s;
+  }
+  .tech-card:hover { background: #1c2128; }
+  .tech-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .tech-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .tech-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.65;
+  }
+
+  /* Equation block */
+  .equation-block {
+    background: #0d1117;
+    border: 1px solid rgba(0,177,64,0.3);
+    border-radius: var(--radius);
+    padding: 40px 48px;
+  }
+  .equation-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .eq-system {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px 20px;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .eq-var {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--accent);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .eq-formula {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #a8e6c0;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  .eq-meaning {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    font-style: italic;
+    white-space: nowrap;
+  }
+  .eq-divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+  .loss-block {
+    background: rgba(0,177,64,0.06);
+    border: 1px solid rgba(0,177,64,0.2);
+    border-radius: 8px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .loss-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    min-width: 80px;
+  }
+  .loss-formula {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: #a8e6c0;
+  }
+
+  /* ── NVIDIA ── */
+  #nvidia {
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .nvidia-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .nvidia-badge-big {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--nvidia-light);
+    border: 1.5px solid #c0dc8a;
+    color: #3d6000;
+    padding: 10px 20px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    letter-spacing: 0.01em;
+  }
+  .nvidia-logo-circle {
+    width: 28px; height: 28px;
+    background: var(--nvidia);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 900;
+    color: #000;
+  }
+  .nvidia-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .nvidia-tool {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  .nvidia-tool:hover { border-color: var(--nvidia); transform: translateX(4px); }
+  .nvidia-tool-icon {
+    width: 36px; height: 36px;
+    background: var(--nvidia-light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .nvidia-tool h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+  }
+  .nvidia-tool p {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .nvidia-right-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 40px;
+    text-align: center;
+  }
+  .inception-logo {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .inception-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+  .inception-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .inception-stat {
+    background: var(--off-white);
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .inception-stat .n {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+  }
+  .inception-stat .l {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ── CTA ── */
+  #cta {
+    background: var(--white);
+    text-align: center;
+    padding: 120px 32px;
+  }
+  #cta h2 { margin: 0 auto 20px; max-width: 640px; }
+  #cta .section-desc { margin: 0 auto 48px; text-align: center; }
+  .cta-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cta-input {
+    flex: 1;
+    min-width: 240px;
+    padding: 14px 18px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.15s;
+    color: var(--text-primary);
+  }
+  .cta-input:focus { border-color: var(--text-primary); }
+  .cta-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 12px;
+  }
+  .cta-trusted {
+    margin-top: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .cta-trusted-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .trust-badge-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
+  }
+  .footer-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-left { font-size: 14px; color: var(--text-muted); }
+  .footer-left strong { color: var(--text-primary); font-weight: 600; }
+  .footer-right { display: flex; gap: 24px; }
+  .footer-right a { font-size: 14px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-right a:hover { color: var(--text-primary); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up:nth-child(1) { transition-delay: 0s; }
+  .fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .fade-up:nth-child(3) { transition-delay: 0.2s; }
+  .fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    section { padding: 64px 20px; }
+    .solution-layout, .nvidia-layout { grid-template-columns: 1fr; gap: 48px; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .problem-card:nth-child(2n) { border-right: none; }
+    .problem-card:nth-child(3) { border-bottom: 1px solid var(--border); }
+    .eq-system { grid-template-columns: 1fr; gap: 6px; }
+    .eq-meaning { display: none; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 24px; }
+    .hero-stat-divider { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7fff00" stroke-width="2.5" stroke-linecap="round">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          <path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
+          <circle cx="12" cy="12" r="1.5" fill="#7fff00" stroke="none"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">PancreaAI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#technology">Technology</a></li>
+      <li><a href="#nvidia">NVIDIA</a></li>
+      <li><a href="#cta" class="nav-cta">Apply to Inception →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Applying for NVIDIA Inception Program
+    </div>
+    <h1>
+      Physics-Informed AI for <em>Early</em> Pancreatic Cancer Detection
+    </h1>
+    <p class="hero-sub">
+      PancreaAI models tumor progression over time using coupled biomarker dynamics and Physics-Informed Neural Networks — detecting cancer <strong>years before symptoms appear</strong>.
+    </p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">
+        Request Access
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#technology" class="btn-secondary">
+        View the Science
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">13<span>%</span></div>
+        <div class="hero-stat-label">5-year survival rate today</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">80<span>%</span></div>
+        <div class="hero-stat-label">diagnosed at late stage</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$5.7<span>B</span></div>
+        <div class="hero-stat-label">diagnostics TAM by 2030</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3<span>×</span></div>
+        <div class="hero-stat-label">biomarkers modeled dynamically</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <p class="section-label fade-up">The Problem</p>
+    <h2 class="fade-up">The Silent Killer<br>has a diagnostic gap</h2>
+    <p class="section-desc fade-up">Pancreatic cancer kills silently. Existing tools treat each scan as an isolated snapshot — missing the progression signals that could save lives.</p>
+
+    <div class="problem-grid fade-up">
+      <div class="problem-card">
+        <div class="problem-icon red">⏱</div>
+        <h3>Delayed Detection</h3>
+        <p>80% of patients are diagnosed at late, metastatic stages when surgical options are no longer available and survival odds collapse.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon orange">📊</div>
+        <h3>Static AI Models</h3>
+        <p>Current clinical AI treats each data point in isolation. It cannot model temporal evolution — missing the disease trajectory that predicts early-stage risk.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon blue">🔬</div>
+        <h3>Untapped Biomarker Data</h3>
+        <p>Longitudinal biomarker dynamics — CA19-9, LYVE1, REG1B — contain rich progression signals. Today these are rarely modeled at scale or in combination.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon purple">🏥</div>
+        <h3>No Clinical Decision Support</h3>
+        <p>Oncologists lack explainable, physics-grounded risk scores that account for individual tumor growth kinetics and inflammatory response over time.</p>
+      </div>
+    </div>
+
+    <div class="problem-big-stat fade-up">
+      <div class="problem-big-stat-text">
+        <div class="num">13%</div>
+        <div class="label">5-Year Survival Rate</div>
+      </div>
+      <p class="problem-big-stat-desc">
+        Despite decades of research, pancreatic cancer survivability remains among the lowest of all cancers. Detected at Stage I, survival rates exceed 80%. The detection gap is the central challenge — and it is solvable.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="container">
+    <div class="solution-layout">
+      <div class="solution-left">
+        <p class="section-label fade-up">Our Solution</p>
+        <h2 class="fade-up">From snapshot<br>to <em style="font-style:italic; color:var(--accent)">movie</em></h2>
+        <p class="section-desc fade-up" style="margin-bottom: 32px;">
+          PancreaAI moves detection from single-point analysis to continuous trajectory modeling — simulating the longitudinal dynamics of biomarkers and tumor growth.
+        </p>
+
+        <div class="solution-features fade-up">
+          <div class="feature-row">
+            <span class="feature-row-num">01</span>
+            <div class="feature-row-content">
+              <h4>Multi-Modal Ingestion</h4>
+              <p>Ingests blood biomarkers, CT/MRI scans, EMR history, and clinical lab data through a unified longitudinal pipeline.</p>
+            </div>
+          </div>
+          <div class="feature-row">
+            <span class="feature-row-num">02</span>
+            <div class="feature-row-content">
+              <h4>PINN Core Engine</h4>
+              <p>Physics-Informed Neural Networks constrained by tumor growth ODEs/PDEs — not just pattern matching, but mechanistic modeling.</p>
+            </div>
+          </div>
+          <div class="feature-row">
+            <span class="feature-row-num">03</span>
+            <div class="feature-row-content">
+              <h4>Temporal Transformer</h4>
+              <p>Attention-based architecture for time-series patient data — capturing when biomarkers shift, not just whether they shift.</p>
+            </div>
+          </div>
+          <div class="feature-row">
+            <span class="feature-row-num">04</span>
+            <div class="feature-row-content">
+              <h4>Risk Scoring Dashboard</h4>
+              <p>Probabilistic early-detection alerts with confidence intervals — giving clinicians explainable, actionable risk scores.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="solution-right fade-up" style="padding-top: 68px;">
+        <p style="font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-muted); margin-bottom:16px;">Traditional AI vs PancreaAI</p>
+        <div class="comparison-box">
+          <div class="comparison-header">
+            <div class="comparison-col-head old">Traditional Approach</div>
+            <div class="comparison-col-head new">PancreaAI</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell old">Single-point biomarker reading</div>
+            <div class="comparison-cell new">Longitudinal trajectory modeling</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell old">Data-only black-box model</div>
+            <div class="comparison-cell new">Physics-informed constraints</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell old">Ignores temporal dynamics</div>
+            <div class="comparison-cell new">Time-series transformer</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell old">No biological plausibility</div>
+            <div class="comparison-cell new">ODE/PDE tumor growth laws</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell old">Detects at late stage</div>
+            <div class="comparison-cell new">Years-early risk signal</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell old">Poor generalization</div>
+            <div class="comparison-cell new">Physics penalty reduces overfitting</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section id="technology">
+  <div class="container">
+    <p class="section-label fade-up">The Science</p>
+    <h2 class="fade-up">Coupled biomarker dynamics<br>constrained by biology</h2>
+    <p class="section-desc fade-up">
+      Our model encodes known laws of tumor biology directly into the neural network's loss function — making predictions that are physically consistent, not just statistically correlated.
+    </p>
+
+    <div class="tech-grid fade-up">
+      <div class="tech-card">
+        <div class="tech-card-label">Architecture</div>
+        <h3>GPU-Accelerated PINN</h3>
+        <p>Native CUDA integration for high-throughput longitudinal ODE/PDE simulation. Runs real-time inference via NVIDIA TensorRT on clinical hardware.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">Core Model</div>
+        <h3>Biophysics-Aware Networks</h3>
+        <p>Neural networks constrained by actual tumor growth mathematics — the Fisher-KPP equation governs spatial diffusion; logistic dynamics govern growth kinetics.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-label">Sequence Modeling</div>
+        <h3>Temporal Transformer</h3>
+        <p>Multi-head attention over irregularly-sampled patient time series. Captures biomarker co-evolution across CA19-9, LYVE1, and REG1B simultaneously.</p>
+      </div>
+    </div>
+
+    <div class="equation-block fade-up">
+      <div class="equation-title">Coupled Physics-Informed Biomarker Dynamics System</div>
+      <div class="eq-system">
+        <div class="eq-var">T(t)</div>
+        <div class="eq-formula">dT/dt = rT(1 − T/K) − γI(T)</div>
+        <div class="eq-meaning">Logistic tumor growth with immune suppression</div>
+        <div class="eq-divider"></div>
+
+        <div class="eq-var">C(t)</div>
+        <div class="eq-formula">dC/dt = α꜀·T − β꜀·C</div>
+        <div class="eq-meaning">CA19-9 secretion & clearance (ODE)</div>
+        <div class="eq-divider"></div>
+
+        <div class="eq-var">L(t)</div>
+        <div class="eq-formula">dL/dt = α_L·T + D_L∇²L − β_L·L</div>
+        <div class="eq-meaning">LYVE1 with lymphatic diffusion (PDE)</div>
+        <div class="eq-divider"></div>
+
+        <div class="eq-var">R(t)</div>
+        <div class="eq-formula">dR/dt = α_R·T − β_R·R + η·F(I)</div>
+        <div class="eq-meaning">REG1B with inflammatory response</div>
+      </div>
+
+      <div class="loss-block">
+        <div class="loss-label">Loss Function</div>
+        <div class="loss-formula">ℒ_total = ℒ_classification + λ_physics · ℒ_PDE</div>
+      </div>
+    </div>
+
+    <!-- LIVE SIMULATION -->
+    <div class="sim-wrapper fade-up">
+      <div class="sim-header">
+        <div>
+          <p class="sim-eyebrow">Live Simulation</p>
+          <h3 class="sim-title">Tumor Progression &amp; Biomarker Dynamics</h3>
+          <p class="sim-sub">Physics-informed model running in real time — adjust parameters to explore how tumor biology changes detection windows.</p>
+        </div>
+        <div class="sim-controls-top">
+          <button class="sim-btn" id="btn-play" onclick="togglePlay()">
+            <svg id="play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            <span id="play-label">Pause</span>
+          </button>
+          <button class="sim-btn" onclick="resetSim()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="sim-stats">
+        <div class="sim-stat">
+          <span class="sim-stat-label">Month</span>
+          <span class="sim-stat-val" id="s-month">0</span>
+        </div>
+        <div class="sim-stat">
+          <span class="sim-stat-label" style="color:#1a7a3a;">Tumor T(t)</span>
+          <span class="sim-stat-val" id="s-T" style="color:#1a7a3a;">0.010</span>
+        </div>
+        <div class="sim-stat">
+          <span class="sim-stat-label" style="color:#1a4ea8;">CA19-9</span>
+          <span class="sim-stat-val" id="s-C" style="color:#1a4ea8;">0.010</span>
+        </div>
+        <div class="sim-stat">
+          <span class="sim-stat-label" style="color:#b06010;">LYVE1</span>
+          <span class="sim-stat-val" id="s-L" style="color:#b06010;">0.010</span>
+        </div>
+        <div class="sim-stat">
+          <span class="sim-stat-label" style="color:#7a1aa0;">REG1B</span>
+          <span class="sim-stat-val" id="s-R" style="color:#7a1aa0;">0.010</span>
+        </div>
+      </div>
+
+      <div class="sim-chart-wrap">
+        <canvas id="simChart" role="img" aria-label="Animated chart showing tumor burden and biomarker levels over 48 months">Tumor burden and biomarkers rise over 48 months according to coupled ODE/PDE physics.</canvas>
+      </div>
+
+      <div class="sim-legend">
+        <span class="sim-leg-item"><span class="sim-leg-line" style="background:#1a7a3a;"></span>Tumor T(t)</span>
+        <span class="sim-leg-item"><span class="sim-leg-line" style="background:#1a4ea8;"></span>CA19-9</span>
+        <span class="sim-leg-item"><span class="sim-leg-dashed" style="border-color:#b06010;"></span>LYVE1 (PDE)</span>
+        <span class="sim-leg-item"><span class="sim-leg-line" style="background:#7a1aa0;"></span>REG1B</span>
+        <span class="sim-leg-item"><span class="sim-leg-thresh"></span>Detection threshold</span>
+      </div>
+
+      <div id="sim-alert" class="sim-alert" style="display:none;">
+        &#9888; <strong>Detection threshold crossed</strong> — Biomarker levels indicate elevated cancer risk. Clinical screening recommended.
+      </div>
+
+      <div class="sim-params">
+        <p class="sim-params-label">Adjust model parameters</p>
+        <div class="sim-params-grid">
+          <div class="sim-param">
+            <label>Growth rate r <span class="sim-param-val" id="v-r">0.15</span></label>
+            <input type="range" min="0.05" max="0.40" step="0.01" value="0.15" oninput="updateParam('r',this.value,'v-r')">
+          </div>
+          <div class="sim-param">
+            <label>Immune effect &#947; <span class="sim-param-val" id="v-g">0.05</span></label>
+            <input type="range" min="0.00" max="0.20" step="0.01" value="0.05" oninput="updateParam('g',this.value,'v-g')">
+          </div>
+          <div class="sim-param">
+            <label>CA19-9 secretion &#945;&#786; <span class="sim-param-val" id="v-ac">0.80</span></label>
+            <input type="range" min="0.2" max="2.0" step="0.1" value="0.8" oninput="updateParam('ac',this.value,'v-ac')">
+          </div>
+          <div class="sim-param">
+            <label>LYVE1 diffusion D_L <span class="sim-param-val" id="v-dl">0.10</span></label>
+            <input type="range" min="0.01" max="0.40" step="0.01" value="0.10" oninput="updateParam('dl',this.value,'v-dl')">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- NVIDIA -->
+<section id="nvidia">
+  <div class="container">
+    <div class="nvidia-layout">
+      <div class="nvidia-left">
+        <div class="nvidia-badge-big">
+          <div class="nvidia-logo-circle">N</div>
+          NVIDIA Inception Member
+        </div>
+        <h2 class="fade-up" style="font-size: clamp(28px,3vw,42px);">Built on the full<br>NVIDIA AI stack</h2>
+        <p class="section-desc fade-up" style="margin-bottom: 32px;">
+          PancreaAI leverages NVIDIA's healthcare AI ecosystem to accelerate from research to clinical deployment.
+        </p>
+
+        <div class="nvidia-tools fade-up">
+          <div class="nvidia-tool">
+            <div class="nvidia-tool-icon">🔬</div>
+            <div>
+              <h4>Clara Guardian</h4>
+              <p>Medical imaging AI integration for CT/MRI analysis pipelines</p>
+            </div>
+          </div>
+          <div class="nvidia-tool">
+            <div class="nvidia-tool-icon">🧬</div>
+            <div>
+              <h4>BioNeMo</h4>
+              <p>Accelerated biofoundation model training on genomic & proteomic data</p>
+            </div>
+          </div>
+          <div class="nvidia-tool">
+            <div class="nvidia-tool-icon">⚡</div>
+            <div>
+              <h4>Holoscan</h4>
+              <p>Real-time edge-AI inference for clinical lab devices at point of care</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nvidia-right fade-up">
+        <div class="nvidia-right-card">
+          <div class="inception-logo">Inception</div>
+          <div class="inception-sub">NVIDIA's global startup accelerator program</div>
+          <div class="inception-stats">
+            <div class="inception-stat">
+              <div class="n">18K+</div>
+              <div class="l">Startups worldwide</div>
+            </div>
+            <div class="inception-stat">
+              <div class="n">$0</div>
+              <div class="l">Cost to join</div>
+            </div>
+            <div class="inception-stat">
+              <div class="n">GPU</div>
+              <div class="l">Credits access</div>
+            </div>
+            <div class="inception-stat">
+              <div class="n">GTM</div>
+              <div class="l">Sales support</div>
+            </div>
+          </div>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;">
+            NVIDIA Inception helps startups in AI and data science by providing go-to-market support, technical expertise, and access to the world's leading GPU infrastructure.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <p class="section-label">Get In Touch</p>
+    <h2>Ready to transform<br>oncology with us?</h2>
+    <p class="section-desc">
+      We're seeking clinical partners, research collaborators, and investors to bring physics-informed early detection to hospitals worldwide.
+    </p>
+    <div class="cta-form">
+      <input class="cta-input" type="email" placeholder="your@institution.com">
+      <a href="mailto:trung@pancrea.ai" class="btn-primary">
+        Contact Us
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <p class="cta-note">Or reach us directly at <a href="mailto:trung@pancrea.ai" style="color:var(--text-primary); font-weight:500;">trung@pancrea.ai</a></p>
+
+    <div class="cta-trusted">
+      <span class="cta-trusted-label">Built for</span>
+      <div class="trust-badge">
+        <div class="trust-badge-icon" style="background:#f0f7e6;">🏥</div>
+        Tier-1 Cancer Centers
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon" style="background:#eff6ff;">🔬</div>
+        Clinical Research Labs
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon" style="background:#f0f7e6; font-size:12px; font-weight:900; color:#3d6000;">N</div>
+        NVIDIA Inception
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon" style="background:#fff7ed;">💊</div>
+        Pharma Partners
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <strong>PancreaAI</strong> · Physics-Informed AI for Early Pancreatic Cancer Detection<br>
+      Trung Vu, Founder & CEO · pancrea.ai
+    </div>
+    <div class="footer-right">
+      <a href="#problem">Problem</a>
+      <a href="#solution">Solution</a>
+      <a href="#technology">Technology</a>
+      <a href="mailto:trungvu0512@cttech.ltd">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Smooth active nav highlight
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? '#0d1117' : '';
+    });
+  });
+</script>
+</body>
+</html>
