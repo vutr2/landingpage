@@ -40,10 +40,10 @@ Mục tiêu: khách xem dịch vụ → tin tưởng → bấm "Nhận báo giá
 - Mọi gói: bảo hành 36 tháng (lỗi kỹ thuật, bảo mật, khôi phục dữ liệu — tính năng mới báo giá riêng).
 - Thanh toán: 40% ký hợp đồng / 40% duyệt demo / 20% nghiệm thu. Gói >15 triệu chia nhỏ theo tiến độ được.
 
-## Liên hệ (placeholder — Trung sẽ thay)
+## Liên hệ
 
-- Email: contact@cttech.ltd
-- Zalo/Hotline: `0900 000 000` → tìm-thay toàn bộ khi có số thật (cả link `zalo.me/...` và `tel:...`).
+- Email: tvu051225@gmail.com
+- Zalo/Hotline: `0356993205`
 
 ## SEO checklist mỗi trang
 
