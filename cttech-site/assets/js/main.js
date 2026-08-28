@@ -1,7 +1,7 @@
 // C&T Technology — shared JS
 document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.getElementById('nav-links');
-  if (navLinks && !navLinks.querySelector('a[href="/product/"]')) {
+  if (navLinks && !navLinks.querySelector('a[href="/product/"]') && location.pathname !== '/product/' && !location.pathname.startsWith('/product')) {
     const li = document.createElement('li');
     li.innerHTML = '<a href="/product/">HemaFit</a>';
     navLinks.insertBefore(li, navLinks.firstElementChild);
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nav && !document.querySelector('.hema-banner')) {
       const bar = document.createElement('div');
       bar.className = 'hema-banner';
-      bar.innerHTML = '<div class="wrap hema-banner-inner"><span>Sản phẩm AI: <b>HemaFit</b> — ESM-2 + clonal fitness cho tín hiệu nguy cơ ung thư máu</span><a href="/product/">Xem product page (EN) →</a></div>';
+      bar.innerHTML = '<div class="wrap hema-banner-inner"><span><b>HemaFit</b> — sản phẩm AI y tế cho ung thư máu. Không phải dịch vụ phần mềm.</span><a href="/product/">Xem sản phẩm →</a></div>';
       nav.insertAdjacentElement('afterend', bar);
     }
   }
