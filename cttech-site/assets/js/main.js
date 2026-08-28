@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.getElementById('nav-links');
   if (navLinks && !navLinks.querySelector('a[href="/product/"]') && location.pathname !== '/product/' && !location.pathname.startsWith('/product')) {
     const li = document.createElement('li');
-    li.innerHTML = '<a href="/product/">HemaFit</a>';
+    li.innerHTML = '<a href="/product/">Sản phẩm AI y tế</a>';
     navLinks.insertBefore(li, navLinks.firstElementChild);
   }
 
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nav && !document.querySelector('.hema-banner')) {
       const bar = document.createElement('div');
       bar.className = 'hema-banner';
-      bar.innerHTML = '<div class="wrap hema-banner-inner"><span><b>HemaFit</b> — sản phẩm AI y tế cho ung thư máu. Không phải dịch vụ phần mềm.</span><a href="/product/">Xem sản phẩm →</a></div>';
+      bar.innerHTML = '<div class="wrap hema-banner-inner"><span><b>C&amp;T Technology Company Limited</b> — sản phẩm AI y tế cho ung thư máu. Không phải dịch vụ phần mềm.</span><a href="/product/">Product page (EN) →</a></div>';
       nav.insertAdjacentElement('afterend', bar);
     }
   }
