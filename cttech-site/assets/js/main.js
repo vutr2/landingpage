@@ -1,17 +1,32 @@
 // C&T Technology — shared JS
 document.addEventListener('DOMContentLoaded', () => {
-  // Đánh dấu link nav đang active theo pathname
+  const navLinks = document.getElementById('nav-links');
+  if (navLinks && !navLinks.querySelector('a[href="/product/"]')) {
+    const li = document.createElement('li');
+    li.innerHTML = '<a href="/product/">HemaFit</a>';
+    navLinks.insertBefore(li, navLinks.firstElementChild);
+  }
+
+  if (location.pathname === '/' || location.pathname === '/index.html') {
+    const nav = document.querySelector('nav');
+    if (nav && !document.querySelector('.hema-banner')) {
+      const bar = document.createElement('div');
+      bar.className = 'hema-banner';
+      bar.innerHTML = '<div class="wrap hema-banner-inner"><span>Sản phẩm AI: <b>HemaFit</b> — ESM-2 + clonal fitness cho tín hiệu nguy cơ ung thư máu</span><a href="/product/">Xem product page (EN) →</a></div>';
+      nav.insertAdjacentElement('afterend', bar);
+    }
+  }
+
   const path = location.pathname;
   document.querySelectorAll('.nav-links a').forEach(a => {
-    if (a.getAttribute('href') !== '/' && path.startsWith(a.getAttribute('href'))) {
+    const href = a.getAttribute('href');
+    if (href && href !== '/' && path.startsWith(href)) {
       a.style.color = 'var(--pine)';
       a.style.fontWeight = '700';
     }
   });
 
-  // Mobile hamburger menu
   const toggle = document.querySelector('.nav-toggle');
-  const navLinks = document.getElementById('nav-links');
   if (toggle && navLinks) {
     const closeMenu = () => {
       toggle.setAttribute('aria-expanded', 'false');
