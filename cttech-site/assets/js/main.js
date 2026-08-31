@@ -1,39 +1,26 @@
-// C&T Technology — shared JS
-document.addEventListener('DOMContentLoaded', () => {
-  // Đánh dấu link nav đang active theo pathname
-  const path = location.pathname;
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    if (a.getAttribute('href') !== '/' && path.startsWith(a.getAttribute('href'))) {
-      a.style.color = 'var(--pine)';
-      a.style.fontWeight = '700';
-    }
+document.addEventListener('DOMContentLoaded', function () {
+  var toggle = document.querySelector('.nav-toggle');
+  var links = document.getElementById('nav-links');
+  if (!toggle || !links) return;
+
+  function setOpen(open) {
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    links.setAttribute('data-open', open ? 'true' : 'false');
+  }
+
+  toggle.addEventListener('click', function () {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
   });
 
-  // Mobile hamburger menu
-  const toggle = document.querySelector('.nav-toggle');
-  const navLinks = document.getElementById('nav-links');
-  if (toggle && navLinks) {
-    const closeMenu = () => {
-      toggle.setAttribute('aria-expanded', 'false');
-      navLinks.classList.remove('is-open');
-    };
-    const openMenu = () => {
-      toggle.setAttribute('aria-expanded', 'true');
-      navLinks.classList.add('is-open');
-    };
-    toggle.addEventListener('click', () => {
-      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      isOpen ? closeMenu() : openMenu();
-    });
-    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeMenu();
-    });
-    document.addEventListener('click', (e) => {
-      if (!navLinks.contains(e.target) && !toggle.contains(e.target)) closeMenu();
-    });
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 900) closeMenu();
-    });
-  }
+  links.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') setOpen(false);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!links.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
+  });
 });

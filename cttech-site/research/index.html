@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeukemiPrediag Research: Predicting Clonal Fitness</title>
+<meta name="description" content="LeukemiPrediag measures clonal fitness to predict which pre-leukaemic mutations expand — real cohort data, external validation, and honest negative results.">
+<link rel="canonical" href="https://www.cttech.ltd/research/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LeukemiPrediag Research: Predicting Clonal Fitness">
+<meta property="og:description" content="LeukemiPrediag measures clonal fitness to predict which pre-leukaemic mutations expand — real cohort data, external validation, and honest negative results.">
+<meta property="og:url" content="https://www.cttech.ltd/research/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="robots" content="index, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="wrap nav-inner">
+    <a class="logo" href="/">C&amp;T <span>Technology</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/research/" aria-current="page">Research</a></li>
+      <li><a href="/roadmap/">Roadmap</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a class="nav-cta" href="/about/#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">The research</span>
+    <h1>Predicting Which Pre-Leukaemic Clones Expand</h1>
+    <p class="lead">LeukemiPrediag is a measurement pipeline for clonal fitness — the growth rate of a mutant blood clone — built to tell, at the level of a single genetic variant, which carriers of clonal haematopoiesis are likely to progress and which are not.</p>
+    <div class="toc">
+      <span class="toc-title">On this page</span>
+      <ul>
+        <li><a href="#the-question">The question</a></li>
+        <li><a href="#the-instrument">The instrument</a></li>
+        <li><a href="#negative-results">Negative results</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="the-question" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The question</h2>
+      <p>Clonal haematopoiesis (CH) is an expanded blood cell clone driven by a somatic mutation — common enough in later life to be a routine, incidental finding whenever blood is sequenced for an unrelated reason.</p>
+    </div>
+    <div class="stat-grid">
+      <div>
+        <div class="stat-number">10–20%</div>
+        <div class="stat-label">of people over 70</div>
+        <p class="stat-desc">carry clonal haematopoiesis — an expanded blood cell clone driven by a single somatic mutation.</p>
+      </div>
+      <div>
+        <div class="stat-number">0.5–1%</div>
+        <div class="stat-label">of carriers progress, per year</div>
+        <p class="stat-desc">to overt myeloid disease. The rest never do — and no available tool tells an individual carrier which group they are in.</p>
+      </div>
+    </div>
+    <p>Clinical practice today stratifies risk by gene identity alone. A well-documented hotspot mutation and a variant that has never been seen before — in the very same gene — are scored identically, because the tools in routine use have no way to tell the two apart.</p>
+    <div class="prose">
+      <p>LeukemiPrediag's prediction target is clonal fitness: the exponential growth rate of a clone, expressed as s = d(log VAF)/dt and measured from repeat sampling of the same person over time. The project tests whether this growth rate can be predicted at the level of the individual variant, not just the gene it happens to sit in — because, as the two figures above make clear, two variants in the same gene can carry very different real-world risk.</p>
+      <p>Framing the problem as a binary label — will this person progress, yes or no — throws away almost all of the available signal. Because only 0.5–1% of carriers progress in any given year, that framing turns roughly 99% of carriers into uninformative negatives. Fitness, in contrast, is measurable in every carrier, ill or not, which makes it a far richer training signal than a rare binary outcome.</p>
+      <p>It also sits closer to the underlying biology than a progression label does. Fitness is not something correlated with disease progression after the fact — it is the growth advantage that drives clonal expansion in the first place. Predicting fitness means modelling the mechanism itself, not a downstream proxy for it.</p>
+    </div>
+  </div>
+</section>
+
+<section id="the-instrument" class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The instrument</h2>
+      <p>To measure fitness at the level of a single variant, we harmonised two independent longitudinal cohorts into one dataset of clonal trajectories.</p>
+    </div>
+    <div class="datatable">
+      <div class="row"><span class="k">Cohorts harmonised</span><span class="v">Lothian Birth Cohorts · SardiNIA</span></div>
+      <div class="row"><span class="k">Participants</span><span class="v">148 (LBC) + 349 (SardiNIA)</span></div>
+      <div class="row"><span class="k">Clonal trajectories</span><span class="v">591</span></div>
+      <div class="row"><span class="k">Unique missense variants, deduplicated</span><span class="v">268</span></div>
+      <div class="row"><span class="k">Noise floor, LBC / SardiNIA (SD)</span><span class="v">0.0288 / 0.0727</span></div>
+    </div>
+    <p class="datatable-note">Synonymous mutations have zero fitness by construction, so the spread of their measured values defines this noise floor — the error bar every real signal has to clear.</p>
+    <div class="stat-grid">
+      <div>
+        <div class="stat-number">4.4×</div>
+        <div class="stat-label">signal enrichment, Lothian cohorts</div>
+        <p class="stat-desc">real signal over the measured noise floor, against a chance expectation of 1.0×.</p>
+      </div>
+      <div>
+        <div class="stat-number">4.1×</div>
+        <div class="stat-label">signal enrichment, SardiNIA</div>
+        <p class="stat-desc">the same measurement repeated in an independent cohort, at the same order of magnitude.</p>
+      </div>
+    </div>
+    <p>Tightening the filtering criteria cut the number of usable trajectories by 94% and tripled the fraction of signal in what remained — evidence that the earlier, looser filters had mostly been keeping noise, not real data.</p>
+    <div class="prose">
+      <p>As an external check, we recovered the estimated growth rate per year broken out by gene, without the model ever being told the answer in advance. Spliceosome factor genes showed the fastest growth rate; DNMT3A showed the slowest. That ordering matches what is already reported in the published literature on this same data (Fabre et al.) — an independent confirmation that the measurement reflects real biology rather than an artifact of the pipeline.</p>
+      <p>The pipeline itself runs on NVIDIA BioNeMo's ESM-2 protein language model, cross-checked against an independently implemented HuggingFace backend, with results recorded per variant so the two implementations can be compared directly against each other.</p>
+    </div>
+  </div>
+</section>
+
+<section id="negative-results" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Negative results</h2>
+      <p>We report what did not work as plainly as what did — it is the clearest evidence that the results above are being checked honestly, not curated.</p>
+    </div>
+    <div class="prose">
+      <p>We tested four additional hypotheses for improving on the baseline fitness predictor. Every one of them scored worse than the training-fold mean, so no ΔR² is reported for any of them — the baseline stands, unbeaten so far.</p>
+      <p>The limiting factor is data, not compute or model capacity. Public longitudinal cohorts for clonal haematopoiesis are already exhausted at this scale. And roughly half of all CHIP mutations — frameshift, splice, and indel variants, including ASXL1 frameshifts, among the strongest signals in myeloid disease — cannot be embedded as single-residue substitutions under a protein-language-model approach at all. That is a structural limitation of the current embedding method, not of the available compute.</p>
+      <p>The next scale of validation requires biobank-scale genomic cohort access, and that access requires an institutional partnership. That partnership — not modelling technique — is the actual bottleneck to progress from here.</p>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/roadmap/">See the roadmap</a>
+      <a class="btn btn-ghost" href="/about/#contact">Contact us</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">LeukemiPrediag</div>
+        <p class="footer-tagline">A clonal-fitness measurement pipeline for clonal haematopoiesis, built by C&amp;T Technology Co., Ltd.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/roadmap/">Roadmap</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="mailto:trungvu0512@cttech.ltd">trungvu0512@cttech.ltd</a></li>
+      </ul>
+    </div>
+    <div class="footer-meta">LeukemiPrediag &middot; C&amp;T Technology Co., Ltd. &middot; Bắc Ninh, Vietnam</div>
+  </div>
+</footer>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

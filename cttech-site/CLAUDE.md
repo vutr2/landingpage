@@ -1,70 +1,68 @@
-# C&T Technology — Website công ty (cttech.ltd)
+# LeukemiPrediag — C&T Technology Co., Ltd.
 
-Website tĩnh đa trang, tiếng Việt, chuẩn SEO, cho công ty C&T Technology Co., Ltd. (Bắc Ninh).
-Mục tiêu: khách xem dịch vụ → tin tưởng → bấm "Nhận báo giá" (Zalo/email). Không có backend.
+Static, English-language, multi-page website for **LeukemiPrediag**, a clonal-fitness measurement
+pipeline for clonal haematopoiesis (CH), built by **C&T Technology Co., Ltd.** (Bắc Ninh, Vietnam). This
+site exists to support the company's application to the **NVIDIA Inception program** — it needs to read
+as a credible, working company website, not a pitch deck. No backend.
 
-## Trạng thái hiện tại
+This replaces a previous Vietnamese-language landing page for a web-design/AI-agent services business
+(see git history before the LeukemiPrediag rewrite if that content is ever needed again).
 
-- `index.html` (trang chủ) — **HOÀN CHỈNH**. Đây là design reference duy nhất. Mọi trang khác phải nhìn giống hệt về style.
-- `assets/css/main.css` — design system dùng chung, đã có đủ class. **Ưu tiên dùng class có sẵn**, chỉ thêm CSS mới khi thực sự cần (thêm vào cuối file, có comment).
-- Các trang con — đã có SEO head + nav + footer + hero + comment `TODO(claude-code)` mô tả nội dung cần viết. Nhiệm vụ của bạn là hoàn thiện chúng.
+## Source of truth
 
-## Design system (KHÔNG thay đổi)
+All factual content on this site comes from the company's NVIDIA Inception pitch deck (August 2026). The
+full fact sheet (every number, cohort name, stat, and the deliberately-sparse sections like "what we need
+from NVIDIA" and "the four rejected hypotheses") is preserved in the workflow script used to draft this
+site — see `.claude` workflow transcripts, or ask the team for the deck. **Do not add any statistic, named
+institution, benefit, date, team member, or client that isn't already on the site** — this is a science
+credibility site; a fabricated number here is far more damaging than on a normal marketing site. If new
+real data becomes available (e.g. a larger cohort, a new validated result), update the numbers and cite
+what changed; don't extrapolate or round up to sound more impressive.
 
-- Màu: nền `--paper #F6F7F4`, chữ `--ink #10231F`, chính `--pine #0E5C4A`, đậm `--pine-deep #083D31`, nhấn `--amber #E8A020`, viền `--line #D9DED8`.
-- Font: Sora (heading), Be Vietnam Pro (body), IBM Plex Mono (giá/nhãn kỹ thuật). Đã load qua Google Fonts trong head từng trang.
-- Signature: con dấu tròn nét đứt màu amber "36 THÁNG BẢO HÀNH" (class `.stamp`, `.mini-stamp`). Mỗi trang dịch vụ nên có `.warranty-line` trước CTA cuối.
-- Class chính: `.wrap .eyebrow .btn .btn-primary .btn-ghost .svc .svc-grid .pc .price-cards .pc.pop .badge .steps .step .warranty-line .contact-card`.
-- FAQ dùng `<details>/<summary>` như trang chủ.
+## Structure
 
-## Giọng văn (quan trọng)
+- `/` — Home: overview + the two headline proof points (signal enrichment, negative-results honesty) +
+  links out.
+- `/research/` — The full scientific case: the question (CH background, clonal fitness as prediction
+  target), the instrument (cohorts, enrichment, external validation, BioNeMo integration), negative
+  results (rejected hypotheses, data-limitation framing, institutional-access gate). This is the
+  credibility centerpiece — keep it precise, no marketing fluff.
+- `/roadmap/` — What we're asking NVIDIA Inception for, and the 3-stage gated roadmap (current result →
+  biobank-scale validation, gated on an institutional partner → clinical pilot, gated on that result).
+- `/about/` — Company blurb + founder contact (`#contact` anchor: Vũ Việt Trung,
+  trungvu0512@cttech.ltd, Bắc Ninh, Vietnam).
+- `/404.html`, `/robots.txt`, `/sitemap.xml`, `/vercel.json` (host-canonicalization redirect,
+  cttech.ltd → www.cttech.ltd).
 
-- Tiếng Việt tự nhiên, xưng "chúng tôi", gọi khách là "bạn". Câu ngắn, cụ thể, không sáo rỗng.
-- So sánh bằng thứ chủ doanh nghiệp nhỏ hiểu: lương nhân viên, tiền quảng cáo, đơn hàng — không dùng thuật ngữ kỹ thuật trừ khi giải thích ngay.
-- KHÔNG bịa: không bịa số liệu khách hàng, dự án, testimonial, thành viên đội ngũ. Chỗ nào cần dữ liệu thật thì để comment `<!-- TODO(Trung): ... -->`.
-- Định vị giá: "giá công ty tinh gọn, thấp hơn agency 20–40%, chất lượng cam kết bằng hợp đồng + bảo hành 36 tháng". Không nói "giá rẻ".
+## Design system (`assets/css/main.css`)
 
-## Bảng giá chính thức (dùng thống nhất mọi trang)
+- Palette: paper `--paper #F3F1EC`, ink `--ink #1E1C19` / `--ink-soft #5B564C`, hairline `--line #DCD7CB`,
+  accent `--amber #A97426` (`--amber-bright #E3B45B` on dark), dark full-bleed block `--dark #1D1B18`.
+- Type: **Source Serif 4** for headings and long-form body copy (editorial, scientific-paper feel);
+  **Inter** for UI chrome — nav, buttons, eyebrows, table labels, footer meta. Both loaded via Google
+  Fonts in each page's `<head>`.
+- Key components: `.eyebrow`, `.hero`, `.section` / `.section-alt` / `.section-dark`, `.stat-grid` /
+  `.stat-hero` (big numbers), `.datatable` (label/value rows with hairline dividers — used for the cohorts
+  table), `.card-grid` / `.card`, `.milestones` / `.milestone` (numbered roadmap steps), `.toc` (research
+  page in-page nav), `.contact-card`, `.btn` / `.btn-primary` / `.btn-ghost`.
+- Prefer existing classes; add new CSS only when genuinely needed, appended to the end of the file.
+- Mobile nav toggle lives in `assets/js/main.js` (hamburger below 768px — see `.nav-toggle` /
+  `.nav-links[data-open]` in the CSS).
 
-| Gói | Giá |
-|---|---|
-| Landing Page chuẩn SEO | từ 1.900.000đ trọn gói |
-| Website Tăng Doanh Số | từ 5.900.000đ trọn gói (badge: Được chọn nhiều nhất) |
-| Website Doanh Nghiệp | từ 8.900.000đ trọn gói |
-| AI Agent CSKH | từ 6.900.000đ triển khai + 1.490.000đ/tháng |
-| AI Agent Kho & Đơn hàng | từ 12.900.000đ + 2.490.000đ/tháng |
-| Bộ AI Agents Toàn Diện | từ 17.900.000đ + 3.490.000đ/tháng |
-| App/Web theo yêu cầu | từ 14.900.000đ, báo giá sau tư vấn miễn phí 45 phút |
-| Dán nhãn / chuẩn bị dữ liệu AI | giá đàm phán theo dự án, dán nhãn thử miễn phí 200 mẫu |
+## Every page's `<head>` must include
 
-- Mọi gói: bảo hành 36 tháng (lỗi kỹ thuật, bảo mật, khôi phục dữ liệu — tính năng mới báo giá riêng).
-- Thanh toán: 40% ký hợp đồng / 40% duyệt demo / 20% nghiệm thu. Gói >15 triệu chia nhỏ theo tiến độ được.
+Canonical URL on `https://www.cttech.ltd`, OG tags (no `og:image` yet — none has been generated; add one
+under `/assets/img/` before relying on social-preview cards), `<title>` ≤ 65 chars, meta description
+140–160 chars, `lang="en"`. Organization JSON-LD lives on the homepage only.
 
-## Liên hệ
+## Voice
 
-- Email: tvu051225@gmail.com
-- Zalo/Hotline: `0356993205`
-
-## SEO checklist mỗi trang
-
-1. Đúng 1 thẻ `<h1>`, heading phân cấp đúng thứ tự.
-2. Title ≤ 65 ký tự chứa từ khoá chính; meta description 140–160 ký tự có giá + CTA.
-3. Canonical + OG đã có sẵn trong head — giữ nguyên, cập nhật nếu đổi nội dung.
-4. JSON-LD theo TODO từng trang (Service/Offer/FAQPage/ContactPage). Trang chủ đã có Organization + FAQPage.
-5. Ảnh (nếu thêm): có `alt` tiếng Việt, dùng `loading="lazy"`, ưu tiên webp trong `/assets/img/`.
-6. Internal link: mỗi trang dịch vụ link tới `/bang-gia/` và `/lien-he/`; blog link tới trang dịch vụ liên quan.
-7. Cập nhật `sitemap.xml` khi thêm trang mới (vd bài blog).
-
-## Việc cần làm (thứ tự ưu tiên)
-
-1. Hoàn thiện 4 trang dịch vụ trong `dich-vu/` theo TODO trong từng file.
-2. Hoàn thiện `bang-gia/` (bảng so sánh chi tiết hạng mục các gói).
-3. Hoàn thiện `lien-he/` (thêm form tĩnh — đề xuất Formspree, để endpoint là TODO).
-4. Hoàn thiện `quy-trinh/`, `du-an/` (không bịa dự án), `blog/` (viết 2–3 bài đầu theo gợi ý trong file).
-5. Thêm hamburger menu mobile vào `assets/js/main.js` + CSS tương ứng (hiện nav-links bị ẩn bớt trên mobile).
-6. Kiểm tra responsive 380px / 768px / 1280px và focus-visible cho mọi phần tử tương tác.
+Precise, unhurried, scientific — closer to a research paper or a serious deep-tech pitch than a sales
+page. State uncertainty and negative results plainly (that's a trust signal here, not something to soften).
+No superlatives ("revolutionary", "cutting-edge") — let the numbers and the literature-matching validation
+carry the credibility.
 
 ## Deploy
 
-Site tĩnh thuần — deploy Cloudflare Pages hoặc Vercel, root = thư mục này, không cần build step.
-URL dạng thư mục (`/dich-vu/ai-agents/`) hoạt động nhờ `index.html` trong mỗi folder.
+Static site — Cloudflare Pages or Vercel, root = this directory, no build step. Folder URLs
+(`/research/`) work via each folder's `index.html`.

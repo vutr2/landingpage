@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap &amp; Requests — LeukemiPrediag</title>
+<meta name="description" content="LeukemiPrediag's path from a workstation-scale result to biobank-scale validation and a clinical pilot — and what we're asking NVIDIA Inception for.">
+<link rel="canonical" href="https://www.cttech.ltd/roadmap/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Roadmap &amp; Requests — LeukemiPrediag">
+<meta property="og:description" content="LeukemiPrediag's path from a workstation-scale result to biobank-scale validation and a clinical pilot — and what we're asking NVIDIA Inception for.">
+<meta property="og:url" content="https://www.cttech.ltd/roadmap/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="robots" content="index, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="wrap nav-inner">
+    <a class="logo" href="/">C&amp;T <span>Technology</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/research/">Research</a></li>
+      <li><a href="/roadmap/" aria-current="page">Roadmap</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a class="nav-cta" href="/about/#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="wrap">
+    <p class="eyebrow">Constraints and requests</p>
+    <h1>The next stage is gated on access, not on modeling technique</h1>
+    <p class="lead">Stage 1 already produced a publishable number on workstation-scale data. Getting past it needs a genomic cohort larger than any public dataset offers, and a pipeline reprocessed at a scale a workstation can't reach on its own. Neither of those is something better modeling can substitute for — they are questions of access.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What we need from NVIDIA Inception</h2>
+    <div class="prose">
+      <p>We're applying to NVIDIA Inception for two things, and both follow directly from what Stage 1 already showed us. Four additional hypotheses for improving on the baseline fitness predictor were tested, and all four scored worse than the training-fold mean — so the near-term limit isn't modeling technique, it's data. Public longitudinal cohorts for clonal haematopoiesis are already exhausted, and roughly half of all CHIP mutations — frameshift, splice, and indel variants, including ASXL1 frameshifts, among the strongest signals in myeloid disease — can't be embedded as single-residue substitutions under a protein-language-model approach at all. Closing that gap means a larger cohort and, eventually, a different embedding approach. Neither is something we can do alone.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Compute to scale the existing pipeline</h3>
+        <p>The Stage 1 pipeline already runs on NVIDIA BioNeMo's ESM-2 protein language model, cross-checked against a HuggingFace backend, on the cohorts harmonised so far. Reprocessing that same pipeline against a larger, biobank-scale cohort is a question of compute headroom to scale, not a new modeling technique.</p>
+      </div>
+      <div class="card">
+        <h3>A route to biobank-scale data</h3>
+        <p>The next scale of validation requires biobank-scale genomic cohort access, which requires an institutional partnership — not a modeling breakthrough. We don't have a confirmed partner yet. What we're asking for is the credibility and network of NVIDIA Inception to help open that conversation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <h2>Roadmap by milestone</h2>
+    <p class="lead">Each stage is gated on the previous one producing a number we would be willing to publish.</p>
+    <div class="milestones">
+      <div class="milestone">
+        <span class="n">01</span>
+        <div>
+          <h3>Workstation-scale result</h3>
+          <p>Lothian Birth Cohorts and SardiNIA harmonised into 591 clonal trajectories across 268 unique missense variants; signal enrichment measured at 4.4× (Lothian) and 4.1× (SardiNIA) over the noise floor; gene-level growth rates recovered blind, matching the published ordering in the literature on this same data; pipeline running on NVIDIA BioNeMo's ESM-2, cross-checked against a HuggingFace backend.</p>
+          <span class="gate">Already produced — this is the completed baseline the rest of the roadmap builds on.</span>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="n">02</span>
+        <div>
+          <h3>Biobank-scale validation</h3>
+          <p>Reprocessing the same fitness-measurement pipeline against a genomic cohort far larger than any public longitudinal dataset offers, to test whether variant-level fitness prediction holds up at a scale that could eventually matter clinically.</p>
+          <span class="gate">Gated on securing an institutional partner.</span>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="n">03</span>
+        <div>
+          <h3>Clinical pilot</h3>
+          <p>Testing whether clonal fitness prediction changes how an individual carrier is actually monitored, rather than only whether it is measurable in a research cohort.</p>
+          <span class="gate">Gated on the Stage 2 result.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/about/#contact">Talk to us</a>
+      <a class="btn btn-ghost" href="/research/">Back to the research</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">LeukemiPrediag</div>
+        <p class="footer-tagline">A clonal-fitness measurement pipeline for clonal haematopoiesis, built by C&amp;T Technology Co., Ltd.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/roadmap/">Roadmap</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="mailto:trungvu0512@cttech.ltd">trungvu0512@cttech.ltd</a></li>
+      </ul>
+    </div>
+    <div class="footer-meta">LeukemiPrediag &middot; C&amp;T Technology Co., Ltd. &middot; Bắc Ninh, Vietnam</div>
+  </div>
+</footer>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>
